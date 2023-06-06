@@ -1,0 +1,33 @@
+// Função em PL/SQL para somar todos os clientes cadastrados em um determinado dia, com base em um 
+// banco de dados que contém o controle de vendas de produtos e cadastro de clientes:
+
+CREATE OR REPLACE FUNCTION somar_clientes_cadastrados(dia DATE) RETURN NUMBER IS
+  total_clientes NUMBER := 0;
+BEGIN
+  SELECT COUNT(*) INTO total_clientes
+  FROM tabela_clientes
+  WHERE TRUNC(data_cadastro) = TRUNC(dia);
+  
+  RETURN total_clientes;
+END;
+
+// Nesta função, supõe-se que exista uma tabela chamada "tabela_clientes" no banco de dados que 
+// armazena as informações dos clientes, com uma coluna chamada "data_cadastro" para registrar a 
+// data de cadastro do cliente.
+
+// A função recebe como parâmetro o dia desejado e utiliza a cláusula `TRUNC` para comparar apenas 
+// a parte da data e ignorar a parte do tempo. A consulta conta o número de clientes cuja data de 
+// cadastro é igual ao dia fornecido e armazena o resultado na variável "total_clientes". Em 
+// seguida, retorna o valor encontrado.
+
+// Para utilizar a função, basta chamá-la passando o dia desejado como argumento:
+
+DECLARE
+  total NUMBER;
+BEGIN
+  total := somar_clientes_cadastrados(TO_DATE('06/06/2023', 'DD/MM/YYYY'));
+  DBMS_OUTPUT.PUT_LINE('Total de clientes cadastrados: ' || total);
+END;
+
+// Dessa forma, a função é chamada passando a data '06/06/2023' no formato 'DD/MM/YYYY'. O valor 
+// retornado é armazenado na variável "total" e, em seguida, é exibido usando o `DBMS_OUTPUT.PUT_LINE`.
